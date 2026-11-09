@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReliefRoute | Disaster Relief &amp; Emergency Resource Routing</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">R</span>
+        <span class="brand-text">Relief<span>Route</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html" class="active">Home</a>
+        <a href="resources.html">Inventory</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">Day 1 &middot; Emergency Resource Routing</span>
+        <h1>Get the right relief supplies to the right place, fast.</h1>
+        <p>
+          ReliefRoute helps administrators, volunteers and donors track rice, water,
+          medicine and other critical supplies across warehouses, hubs and field camps.
+        </p>
+        <ul class="hero-points">
+          <li>Live inventory with category tracking</li>
+          <li>Role-based access: admin, volunteer, donor</li>
+          <li>Raw MySQL queries &mdash; fast and predictable</li>
+        </ul>
+      </div>
+
+      <div class="auth-grid">
+        <!-- LOGIN -->
+        <section class="card">
+          <h2 class="card-title">Login</h2>
+          <p class="card-sub">Access the inventory dashboard</p>
+          <div id="login-alert" class="alert" hidden></div>
+          <form id="login-form" class="form" novalidate>
+            <label class="field">
+              <span>Email</span>
+              <input type="email" name="email" placeholder="admin@relief.org" autocomplete="email" required />
+            </label>
+            <label class="field">
+              <span>Password</span>
+              <input type="password" name="password" placeholder="••••••••" autocomplete="current-password" required />
+            </label>
+            <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+          </form>
+          <p class="hint">Demo: admin@relief.org / admin123</p>
+        </section>
+
+        <!-- REGISTER -->
+        <section class="card">
+          <h2 class="card-title">Create account</h2>
+          <p class="card-sub">Join as admin, volunteer or donor</p>
+          <div id="register-alert" class="alert" hidden></div>
+          <form id="register-form" class="form" novalidate>
+            <label class="field">
+              <span>Full name</span>
+              <input type="text" name="name" placeholder="Your name" autocomplete="name" required />
+            </label>
+            <label class="field">
+              <span>Email</span>
+              <input type="email" name="email" placeholder="you@example.org" autocomplete="email" required />
+            </label>
+            <label class="field">
+              <span>Password</span>
+              <input type="password" name="password" placeholder="Min. 6 characters" autocomplete="new-password" required />
+            </label>
+            <label class="field">
+              <span>Role</span>
+              <select name="role" required>
+                <option value="volunteer">Volunteer</option>
+                <option value="donor">Donor</option>
+                <option value="admin">Admin</option>
+              </select>
+            </label>
+            <button type="submit" class="btn btn-success btn-block">Register</button>
+          </form>
+        </section>
+      </div>
+    </section>
+
+    <section class="feature-strip">
+      <article class="feature">
+        <h3>1. Register</h3>
+        <p>Create an account with a role that matches your job in the relief chain.</p>
+      </article>
+      <article class="feature">
+        <h3>2. Log supplies</h3>
+        <p>Add incoming resources with quantity, status and storage location.</p>
+      </article>
+      <article class="feature">
+        <h3>3. Route aid</h3>
+        <p>See everything in one table and move supplies where they are needed most.</p>
+      </article>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>ReliefRoute &copy; 2026 &middot; Disaster Relief &amp; Emergency Resource Routing System</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

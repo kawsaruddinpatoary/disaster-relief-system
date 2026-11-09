@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventory | ReliefRoute</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">R</span>
+        <span class="brand-text">Relief<span>Route</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="resources.html" class="active">Inventory</a>
+      </nav>
+      <div class="nav-user" id="nav-user" hidden>
+        <span class="avatar" id="user-avatar">?</span>
+        <span class="user-meta">
+          <strong id="user-name">—</strong>
+          <small id="user-role">—</small>
+        </span>
+        <button type="button" class="btn btn-ghost btn-sm" id="logout-btn">Logout</button>
+      </div>
+      <a class="btn btn-primary btn-sm" id="login-link" href="index.html">Login</a>
+    </div>
+  </header>
+
+  <main class="container page">
+    <div class="page-head">
+      <div>
+        <span class="eyebrow">Resource Inventory</span>
+        <h1>Current supplies</h1>
+        <p class="muted">All relief resources fetched live from <code>GET /api/resources</code></p>
+      </div>
+      <div class="stat-row" id="stat-row">
+        <div class="stat"><strong id="stat-total">0</strong><span>Total items</span></div>
+        <div class="stat"><strong id="stat-available">0</strong><span>Available</span></div>
+        <div class="stat"><strong id="stat-units">0</strong><span>Total units</span></div>
+      </div>
+    </div>
+
+    <!-- ADD RESOURCE -->
+    <section class="card">
+      <h2 class="card-title">Add new resource</h2>
+      <p class="card-sub">Inserts a row via <code>POST /api/resources</code></p>
+      <div id="resource-alert" class="alert" hidden></div>
+      <form id="resource-form" class="form form-grid" novalidate>
+        <label class="field">
+          <span>Category</span>
+          <select name="category_id" id="category-select" required>
+            <option value="">Loading categories…</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Resource name</span>
+          <input type="text" name="name" placeholder="e.g. Rice Sacks 25kg" required />
+        </label>
+        <label class="field">
+          <span>Quantity</span>
+          <input type="number" name="quantity" min="0" step="1" value="1" required />
+        </label>
+        <label class="field">
+          <span>Status</span>
+          <select name="status">
+            <option value="available">available</option>
+            <option value="reserved">reserved</option>
+            <option value="dispatched">dispatched</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Location</span>
+          <input type="text" name="location" placeholder="e.g. Dhaka Central Warehouse" required />
+        </label>
+        <div class="field field-action">
+          <button type="submit" class="btn btn-primary">Add resource</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- INVENTORY TABLE -->
+    <section class="card card-flush">
+      <div class="card-head">
+        <div>
+          <h2 class="card-title">Inventory table</h2>
+          <p class="card-sub">Joined with <code>categories</code> for readable names</p>
+        </div>
+        <button type="button" class="btn btn-outline btn-sm" id="refresh-btn">Refresh</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="table" id="resources-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Category</th>
+              <th>Name</th>
+              <th class="num">Qty</th>
+              <th>Status</th>
+              <th>Location</th>
+            </tr>
+          </thead>
+          <tbody id="resources-body">
+            <tr><td colspan="6" class="empty">Loading resources…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>ReliefRoute &copy; 2026 &middot; Disaster Relief &amp; Emergency Resource Routing System</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
