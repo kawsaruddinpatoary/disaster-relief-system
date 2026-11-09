@@ -577,6 +577,21 @@ select:focus {
   color: #3538cd;
 }
 
+.badge-pending {
+  background: #fffbeb;
+  color: var(--warning);
+}
+
+.badge-approved {
+  background: #eef4ff;
+  color: #3538cd;
+}
+
+.badge-fulfilled {
+  background: #ecfdf3;
+  color: #067647;
+}
+
 /* ---------------- Footer ---------------- */
 .footer {
   background: var(--navy);

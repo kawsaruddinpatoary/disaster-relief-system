@@ -243,9 +243,171 @@ function initInventoryPage() {
 }
 
 // ------------------------------------------------------------------
+// Requests page: submit form + list + approve actions
+// ------------------------------------------------------------------
+async function loadUsersOptions() {
+  const select = document.getElementById('request-user');
+  if (!select) return;
+  try {
+    const users = await api('/api/users');
+    select.innerHTML = users.length
+      ? users
+          .map(
+            (u) =>
+              `<option value="${escapeHtml(u.id)}">${escapeHtml(u.name)} (${escapeHtml(u.role)})</option>`
+          )
+          .join('')
+      : '<option value="">No users found</option>';
+  } catch (err) {
+    select.innerHTML = '<option value="">Failed to load users</option>';
+    console.error(err);
+  }
+}
+
+async function loadCategoryOptions() {
+  const select = document.getElementById('request-category');
+  if (!select) return;
+  try {
+    const categories = await api('/api/categories');
+    select.innerHTML = categories.length
+      ? categories
+          .map((c) => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.name)}</option>`)
+          .join('')
+      : '<option value="">No categories found</option>';
+  } catch (err) {
+    select.innerHTML = '<option value="">Failed to load categories</option>';
+    console.error(err);
+  }
+}
+
+function requestBadge(status) {
+  return `<span class="badge badge-${escapeHtml(status)}">${escapeHtml(status)}</span>`;
+}
+
+function renderRequests(rows) {
+  const body = document.getElementById('requests-body');
+  if (!body) return;
+
+  if (!rows.length) {
+    body.innerHTML = '<tr><td colspan="9" class="empty">No relief requests yet.</td></tr>';
+  } else {
+    body.innerHTML = rows
+      .map(
+        (r) => `
+      <tr>
+        <td class="num mono">${escapeHtml(r.id)}</td>
+        <td>${escapeHtml(r.user_name || '—')}</td>
+        <td class="num">${escapeHtml(r.user_role || '—')}</td>
+        <td>${escapeHtml(r.category_name || 'Uncategorised')}</td>
+        <td>${escapeHtml(r.location)}</td>
+        <td class="num">${requestBadge(r.status)}</td>
+        <td class="num">${escapeHtml(r.priority)}</td>
+        <td>${escapeHtml(r.created_at)}</td>
+        <td class="num actions">
+          ${r.status === 'pending'
+            ? `<button type="button" class="btn btn-sm btn-outline" data-action="approve" data-id="${escapeHtml(r.id)}">Approve</button>`
+            : `<span class="badge badge-${escapeHtml(r.status)}">${escapeHtml(r.status)}</span>`}
+        </td>
+      </tr>`
+      )
+      .join('');
+  }
+}
+
+async function loadRequests() {
+  const body = document.getElementById('requests-body');
+  try {
+    const rows = await api('/api/requests');
+    renderRequests(rows);
+  } catch (err) {
+    if (body) body.innerHTML = `<tr><td colspan="9" class="empty">${escapeHtml(err.message)}</td></tr>`;
+  }
+}
+
+function initRequestsPage() {
+  const form = document.getElementById('request-form');
+  if (!form) return;
+
+  renderNavUser();
+  loadUsersOptions();
+  loadCategoryOptions();
+  loadRequests();
+
+  const alertBox = document.getElementById('request-alert');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideAlert(alertBox);
+    try {
+      const payload = {
+        requested_by_user_id: Number(form.elements.user_id.value),
+        category_id: Number(form.elements.category_id.value),
+        location: String(form.elements.location.value).trim(),
+        priority: String(form.elements.priority.value),
+        status: 'pending',
+      };
+      await api('/api/requests', { method: 'POST', body: JSON.stringify(payload) });
+      showAlert(alertBox, 'Relief request submitted — awaiting approval.', 'success');
+      form.reset();
+      await loadRequests();
+    } catch (err) {
+      showAlert(alertBox, err.message);
+    }
+  });
+
+  // Approve buttons via event delegation
+  document.getElementById('requests-body')?.addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-action="approve"]');
+    if (!btn) return;
+    const id = btn.dataset.id;
+    try {
+      await api(`/api/requests/${id}/approve`, { method: 'PUT' });
+      await loadRequests();
+    } catch (err) {
+      showAlert(alertBox, err.message);
+    }
+  });
+
+  document.getElementById('refresh-requests-btn')?.addEventListener('click', loadRequests);
+}
+
+// ------------------------------------------------------------------
+// Dashboard page: aggregate metric cards
+// ------------------------------------------------------------------
+async function loadDashboardStats() {
+  const statTotal = document.getElementById('stat-total-requests');
+  const statInventory = document.getElementById('stat-inventory');
+  const statDispatches = document.getElementById('stat-dispatches');
+  const updated = document.getElementById('dashboard-updated');
+  if (!statTotal) return;
+
+  try {
+    const stats = await api('/api/dashboard/stats');
+    statTotal.textContent = Number(stats.total_requests || 0);
+    statInventory.textContent = Number(stats.total_resources || 0);
+    statDispatches.textContent = Number(stats.total_dispatched || 0);
+    if (updated) updated.textContent = `Last refreshed: ${new Date().toLocaleTimeString()}`;
+  } catch (err) {
+    if (updated) updated.textContent = `Failed to load stats: ${escapeHtml(err.message)}`;
+    console.error(err);
+  }
+}
+
+function initDashboardPage() {
+  if (!document.getElementById('stat-total-requests')) return;
+
+  renderNavUser();
+  loadDashboardStats();
+
+  document.getElementById('refresh-dashboard-btn')?.addEventListener('click', loadDashboardStats);
+}
+
+// ------------------------------------------------------------------
 // Boot
 // ------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
   initAuthPage();
   initInventoryPage();
+  initRequestsPage();
+  initDashboardPage();
 });

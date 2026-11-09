@@ -6,6 +6,8 @@ const express = require('express');
 const cors = require('cors');
 
 const { pool, testConnection } = require('./db');
+const { requestsRouter, dashboardRouter } = require('./routes/requests');
+const dispatchesRouter = require('./routes/dispatches');
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
@@ -160,6 +162,27 @@ app.post('/api/resources', async (req, res, next) => {
     return next(err);
   }
 });
+
+// ==================================================================
+// USERS (lightweight list for request dropdowns - passwords excluded)
+// ==================================================================
+app.get('/api/users', async (req, res, next) => {
+  try {
+    const [rows] = await pool.query(
+      'SELECT id, name, email, role FROM users ORDER BY name ASC'
+    );
+    return res.json(rows);
+  } catch (err) {
+    return next(err);
+  }
+});
+
+// ==================================================================
+// RELIEF REQUESTS & RESOURCE DISPATCHES (Day 1)
+// ==================================================================
+app.use('/api/requests', requestsRouter);
+app.use('/api/dashboard', dashboardRouter);
+app.use('/api/dispatches', dispatchesRouter);
 
 // ==================================================================
 // Errors / 404

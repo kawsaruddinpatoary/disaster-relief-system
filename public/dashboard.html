@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | ReliefRoute</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">R</span>
+        <span class="brand-text">Relief<span>Route</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="resources.html">Inventory</a>
+        <a href="requests.html">Requests</a>
+        <a href="dashboard.html" class="active">Dashboard</a>
+      </nav>
+      <div class="nav-user" id="nav-user" hidden>
+        <span class="avatar" id="user-avatar">?</span>
+        <span class="user-meta">
+          <strong id="user-name">—</strong>
+          <small id="user-role">—</small>
+        </span>
+        <button type="button" class="btn btn-ghost btn-sm" id="logout-btn">Logout</button>
+      </div>
+      <a class="btn btn-primary btn-sm" id="login-link" href="index.html">Login</a>
+    </div>
+  </header>
+
+  <main class="container page">
+    <div class="page-head">
+      <div>
+        <span class="eyebrow">Dashboard</span>
+        <h1>Operations overview</h1>
+        <p class="muted">Live aggregates from <code>GET /api/dashboard/stats</code></p>
+      </div>
+      <button type="button" class="btn btn-outline btn-sm" id="refresh-dashboard-btn">Refresh</button>
+    </div>
+
+    <!-- METRIC CARDS -->
+    <section class="card">
+      <h2 class="card-title">Key metrics</h2>
+      <p class="card-sub">One raw aggregation query counting requests, inventory items and dispatches.</p>
+      <div class="stat-row" id="dashboard-stats">
+        <div class="stat"><strong id="stat-total-requests">0</strong><span>Total requests</span></div>
+        <div class="stat"><strong id="stat-inventory">0</strong><span>Inventory items</span></div>
+        <div class="stat"><strong id="stat-dispatches">0</strong><span>Dispatches</span></div>
+      </div>
+      <p id="dashboard-updated" class="muted"></p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>ReliefRoute &copy; 2026 &middot; Disaster Relief &amp; Emergency Resource Routing System</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

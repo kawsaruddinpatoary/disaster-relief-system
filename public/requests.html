@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Requests | ReliefRoute</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">R</span>
+        <span class="brand-text">Relief<span>Route</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="resources.html">Inventory</a>
+        <a href="requests.html" class="active">Requests</a>
+        <a href="dashboard.html">Dashboard</a>
+      </nav>
+      <div class="nav-user" id="nav-user" hidden>
+        <span class="avatar" id="user-avatar">?</span>
+        <span class="user-meta">
+          <strong id="user-name">—</strong>
+          <small id="user-role">—</small>
+        </span>
+        <button type="button" class="btn btn-ghost btn-sm" id="logout-btn">Logout</button>
+      </div>
+      <a class="btn btn-primary btn-sm" id="login-link" href="index.html">Login</a>
+    </div>
+  </header>
+
+  <main class="container page">
+    <div class="page-head">
+      <div>
+        <span class="eyebrow">Relief Requests</span>
+        <h1>Route aid to people in need</h1>
+        <p class="muted">Submit via <code>POST /api/requests</code> &middot; list via <code>GET /api/requests</code> &middot; approve via <code>PUT /api/requests/:id/approve</code></p>
+      </div>
+    </div>
+
+    <!-- SUBMIT REQUEST -->
+    <section class="card">
+      <h2 class="card-title">Submit a new relief request</h2>
+      <p class="card-sub">A beneficiary or volunteer asks for supplies in a location. Status defaults to <code>pending</code>.</p>
+      <div id="request-alert" class="alert" hidden></div>
+      <form id="request-form" class="form form-grid" novalidate>
+        <label class="field">
+          <span>Requested by</span>
+          <select name="user_id" id="request-user" required>
+            <option value="">Loading users…</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Category</span>
+          <select name="category_id" id="request-category" required>
+            <option value="">Loading categories…</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Location</span>
+          <input type="text" name="location" placeholder="e.g. Charpia Village, Sylhet" required />
+        </label>
+        <label class="field">
+          <span>Priority</span>
+          <select name="priority" required>
+            <option value="high">High</option>
+            <option value="medium" selected>Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </label>
+        <div class="field field-action">
+          <button type="submit" class="btn btn-primary">Submit request</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- REQUESTS TABLE -->
+    <section class="card card-flush">
+      <div class="card-head">
+        <div>
+          <h2 class="card-title">All relief requests</h2>
+          <p class="card-sub">Joined with <code>users</code> and <code>categories</code> for readable names</p>
+        </div>
+        <button type="button" class="btn btn-outline btn-sm" id="refresh-requests-btn">Refresh</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="table" id="requests-table">
+          <thead>
+            <tr>
+              <th class="num">#</th>
+              <th>Requested by</th>
+              <th class="num">Role</th>
+              <th>Category</th>
+              <th>Location</th>
+              <th class="num">Status</th>
+              <th class="num">Priority</th>
+              <th>Requested at</th>
+              <th class="num">Action</th>
+            </tr>
+          </thead>
+          <tbody id="requests-body">
+            <tr><td colspan="9" class="empty">Loading requests…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>ReliefRoute &copy; 2026 &middot; Disaster Relief &amp; Emergency Resource Routing System</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
